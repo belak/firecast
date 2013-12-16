@@ -27,30 +27,44 @@
 						p.resize();
 					}
 
+					p.pixelRect = function(x,y) {
+						p.rect(x,y,1,1);
+					}
+
+					p.setupTransform = function() {
+						var w = canvas.width;
+						var h = canvas.height;
+
+						p.translate(0,h);
+						p.scale(1,-1);
+						p.translate((w-p.gridWidth*p.pixelSize)/2.0,0);
+						p.scale(p.pixelSize,p.pixelSize);
+						p.strokeWeight(1/p.pixelSize);
+					}
+
 					p.draw = function() {
 						p.resize();
 						p.updateFire();
 						p.background(0);
 
-						var w = canvas.width;
-						var h = canvas.height;
+						p.pushMatrix();
+						p.setupTransform();
 
-						var x = (w - p.fire[0].length * p.pixelSize) / 2;
-
-						var x1 = p.fire[0].length / 2;
+						var x1 = p.gridWidth / 2;
 						var y1 = 2;
 
-						var maxDist = Math.sqrt(Math.pow(x1 - 0, 2) + Math.pow(y1 - p.fire.length, 2));
+						var maxDist = p.dist(x1, y1, 0, p.gridHeight);
 
-						for (var i = 0; i < p.fire.length; i++) {
-							for (var j = 0; j < p.fire[i].length; j++) {
-								var r = p.fire[i][j].r - Math.abs(x + p.pixelSize * j - w / 2) / 7;
+						p.noStroke();
+
+						for (var i = 0; i < p.gridHeight; i++) {
+							for (var j = 0; j < p.gridWidth; j++) {
+								var r = p.fire[i][j].r - Math.abs(i - p.gridWidth / 2) * p.pixelSize / 7;
 								if (r > 10) {
-									var dist = Math.sqrt(Math.pow(x1 - j, 2) + Math.pow(y1 - i, 2)) / maxDist;
-									//p.stroke(0, 0, 0);
-									p.stroke(r, r * dist, p.fire[i][j].b);
+									var dist = p.dist(x1,y1,j,i) / maxDist;
+									p.stroke(r, r*dist, p.fire[i][j].b);
 									p.fill(r, r * dist, p.fire[i][j].b);
-									p.rect(x + p.pixelSize * j, h - (i + 1) * p.pixelSize, p.pixelSize, p.pixelSize);
+									p.pixelRect(j,i);
 								}
 							}
 						}
@@ -58,23 +72,22 @@
 						for (var i = 0; i < p.embers.length; i++) {
 							p.stroke(128, 0, 0);
 							p.fill(128, 0, 0);
-							p.rect(x + p.pixelSize * p.embers[i].x, h - (p.embers[i].y + 1) * p.pixelSize, p.pixelSize, p.pixelSize);
+							p.pixelRect(p.embers[i].x, p.embers[i].y+1);
 						}
 
-						// For good measure right now
-						p.stroke(255, 0, 255);
-						p.fill(255, 0, 255);
-						p.line(w / 2, 0, w / 2, h);
+						p.popMatrix();
 					}
 
 					p.resize = function() {
 						p.size(canvas.width, canvas.height);
+						p.gridHeight = p.floor(canvas.height / p.pixelSize * 2 / 3);
+						p.gridWidth = p.floor(canvas.width / p.pixelSize);
 
 						p.fire = [];
 						p.perlinTimer += 1;
-						for (var i = 0; i < canvas.height / p.pixelSize * 2 / 3; i++) {
+						for (var i = 0; i < p.gridHeight; i++) {
 							p.fire.push([]);
-							for (var j = 0; j < canvas.width / p.pixelSize; j++) {
+							for (var j = 0; j < p.gridWidth; j++) {
 								var pixel = {
 									//r: Math.floor(Math.random() * (127 + 1)) + 127 * p.noise(j, i),
 									r: 255 * p.noise(j * 0.3, i * 0.3, p.perlinTimer) - i * 7,
@@ -128,3 +141,6 @@
 		<canvas id="fire"></canvas>
 	</body>
 </html>
+
+
+
