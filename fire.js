@@ -8,9 +8,9 @@ $(function() {
 	sketch.attachFunction = function(p) {
 		// Simple function to pull all settings from an object and dump them into the processing object
 		p.updateSettings = function(settings) {
-			p.settings = settings;
 			for (var x in settings) {
 				p[x] = settings[x];
+				p.settings[x] = settings[x];
 			}
 		}
 
@@ -23,16 +23,16 @@ $(function() {
 		}
 
 		p.setup = function() {
+			p.settings = {};
+
 			p.updateSettings({
 				pixelSize: 15,
 
 				// Perlin Variables
-				perlinTimer: 0,
 				perlinScale: 0.2,
 				perlinStep: 0.2,
 
 				// Ember Variables
-				emberTimer: 0,
 				emberAlpha: 128,
 
 				// Display Variables
@@ -40,11 +40,15 @@ $(function() {
 				heightScale: 0.5,
 
 				pallete: [
-					{val: 80,  color: [0,0,0]},
-					{val: 110, color: [255,0,0]},
-					{val: 150, color: [255,255,0]}
+					{val: 70,  color: [0,   0,   0]},
+					{val: 110, color: [255, 0,   0]},
+					{val: 150, color: [255, 255, 0]}
 				]
 			});
+
+			// Set the counters
+			p.perlinTimer = 0,
+			p.emberTimer = 0,
 
 			// Set up the size
 			p.resize();
@@ -154,6 +158,7 @@ $(function() {
 
 					// Scale down based on distance from origin
 					h *= 1.0 - p.dist(p.gridWidth / 2, 2, j, i) / maxDist;
+
 					var pixel = {
 						h: h
 					};
@@ -197,13 +202,30 @@ $(function() {
 
 	var p = new Processing(canvas, sketch);
 
-	$(window).bind('keypress', function (e) {
+	$(window).bind('keydown', function (e) {
+		var matched = true;
 		var s = p.settings;
+		console.log(e.which);
 		switch (e.which) {
-			case 112: // 'p'
+			// Arrows
+			case 37: // Left
+				break;
+			case 38: // Up
+				s.heightScale -= 0.1;
+				break;
+			case 39: // Right
+				break;
+			case 40: // Down
+				s.heightScale += 0.1;
+				break;
+			case 80: // 'p'
 				s.pixelBoundaries = !s.pixelBoundaries;
 				break;
+			default:
+				matched = false;
+				break;
 		}
+		if (matched) e.preventDefault();
 		p.updateSettings(s);
 	});
 
