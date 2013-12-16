@@ -63,7 +63,7 @@
 
 						for (var i = 0; i < p.gridHeight; i++) {
 							for (var j = 0; j < p.gridWidth; j++) {
-								var r = p.fire[i][j].r - Math.abs(i - p.gridWidth / 2) * p.pixelSize / 7;
+								var r = p.fire[i][j].r - p.abs(i - p.gridWidth / 2) * p.pixelSize / 7;
 								var dist = p.dist(x1, y1, j, i) / maxDist;
 								p.stroke(r, r * dist, p.fire[i][j].b);
 								p.fill(r, r * dist, p.fire[i][j].b);
@@ -119,7 +119,7 @@
 						p.emberTimer += 1;
 						if (p.emberTimer > 5) {
 							p.emberTimer = 0;
-							var x = Math.floor(Math.random() * (p.fire[0].length));
+							var x = p.floor(p.random() * (p.fire[0].length));
 							for (var i = 0; i < p.fire.length; i++) {
 								if (p.fire[i][x].r + p.fire[i][x].g + p.fire[i][x].b > 50) {
 									var ember = {
