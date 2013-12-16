@@ -1,5 +1,5 @@
-$(function() {
-	var canvas = $("#fire").first()[0];
+window.onload = function() {
+	var canvas = document.getElementById('fire');
 
 	canvas.width = window.innerWidth;
 	canvas.height = window.innerHeight;
@@ -221,7 +221,7 @@ $(function() {
 
 	var p = new Processing(canvas, sketch);
 
-	$(window).bind('keydown', function (e) {
+	window.onkeydown = function (e) {
 		var matched = true;
 		var s = p.s;
 		//console.log(e.which);
@@ -248,13 +248,12 @@ $(function() {
 		}
 		if (matched) e.preventDefault();
 		p.updateSettings(s);
-	});
+	};
 
-	$(window).resize(function() {
+	window.onresize = function() {
 		canvas.width = window.innerWidth;
 		canvas.height = window.innerHeight;
 
 		p.resize();
-	});
-});
-
+	};
+};
