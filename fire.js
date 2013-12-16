@@ -6,6 +6,7 @@ $(function() {
 
 	var sketch = new Processing.Sketch();
 	sketch.attachFunction = function(p) {
+		// Simple function to pull all settings from an object and dump them into the processing object
 		p.updateSettings = function(settings) {
 			p.settings = settings;
 			for (var x in settings) {
@@ -13,12 +14,15 @@ $(function() {
 			}
 		}
 
-		p.setup = function() {
+		// Resizes the processing canvas based on the html canvas
+		p.resize = function() {
 			p.size(canvas.width, canvas.height);
 
-			// Use this to limit tearing and make it more "pixely"
-			p.frameRate(15);
+			p.gridHeight = p.floor(canvas.height / p.pixelSize);
+			p.gridWidth = p.floor(canvas.width / p.pixelSize);
+		}
 
+		p.setup = function() {
 			p.updateSettings({
 				pixelSize: 15,
 
@@ -36,17 +40,23 @@ $(function() {
 				heightScale: 0.5,
 
 				pallete: [
-					{val: 80, color: [0,0,0]},
+					{val: 80,  color: [0,0,0]},
 					{val: 110, color: [255,0,0]},
 					{val: 150, color: [255,255,0]}
 				]
 			});
 
-			p.embers = [];
-
+			// Set up the size
 			p.resize();
+
+			// Use this to limit tearing and make it more "pixely"
+			p.frameRate(15);
+
+
+			p.embers = [];
 		}
 
+		// Draws a big pixel
 		p.pixelRect = function(x,y) {
 			p.rect(x, y, 1, 1);
 		}
@@ -63,7 +73,7 @@ $(function() {
 		}
 
 		p.arrColor = function(cr) {
-			return p.color(cr[0],cr[1],cr[2]);
+			return p.color(cr[0], cr[1], cr[2]);
 		}
 
 		// black -> blue -> -> red -> orange -> yellow
@@ -84,9 +94,10 @@ $(function() {
 		}
 
 		p.draw = function() {
-			// Update stuff that needs to be
+			// Update state
 			p.updateFire();
 
+			// Clear the screen
 			p.background(0);
 
 			p.pushMatrix();
@@ -124,12 +135,6 @@ $(function() {
 			}
 
 			p.popMatrix();
-		}
-
-		p.resize = function() {
-			p.size(canvas.width, canvas.height);
-			p.gridHeight = p.floor(canvas.height / p.pixelSize);
-			p.gridWidth = p.floor(canvas.width / p.pixelSize);
 		}
 
 		p.updateFire = function() {
@@ -190,6 +195,16 @@ $(function() {
 	}
 
 	var p = new Processing(canvas, sketch);
+
+	$(window).bind('keypress', function (e) {
+		var s = p.settings;
+		switch (e.which) {
+			case 112: // 'p'
+				s.pixelBoundaries = !s.pixelBoundaries;
+				break;
+		}
+		p.updateSettings(s);
+	});
 
 	$(window).resize(function() {
 		canvas.width = window.innerWidth;
