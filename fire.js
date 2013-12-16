@@ -40,10 +40,26 @@ $(function() {
 				pixelBoundaries: false,
 				heightScale: 0.5,
 
-				pallete: [
-					{val: 70,  color: [0,   0,   0]},
-					{val: 110, color: [255, 0,   0]},
-					{val: 150, color: [255, 255, 0]}
+				currentPallete: 0,
+
+				palletes: [
+				   	[
+						{val: 70,  color: [0,   0,   0]},
+						{val: 110, color: [255, 0,   0]},
+						{val: 150, color: [255, 255, 0]},
+					],
+					[
+						{val: 78,  color: [0,   0,   0]},
+						{val: 79,  color: [0,   0,   10]},
+						{val: 80,  color: [0,   0,   90]},
+						{val: 81,  color: [150, 75,  0]},
+						{val: 82,  color: [150, 90,  0]},
+						{val: 83,  color: [175, 75,  0]},
+						{val: 84,  color: [255, 0,   0]},
+						{val: 85,  color: [255, 128, 0]},
+						{val: 115, color: [255, 255, 0]},
+						{val: 120, color: [255, 255, 255]},
+					],
 				]
 			});
 
@@ -85,14 +101,15 @@ $(function() {
 		p.heatToColor = function(heat) {
 			var last = {val: 0, color: [0,0,0]};
 			var color = 0;
-			for (var i = 0; i < p.pallete.length; i++) {
-				if (heat <= p.pallete[i].val) {
+			var pallete = p.palletes[p.currentPallete];
+			for (var i = 0; i < pallete.length; i++) {
+				if (heat <= pallete[i].val) {
 					color = p.lerpColor(p.arrColor(last.color),
-					                    p.arrColor(p.pallete[i].color),
-					                    (heat - last.val) / (p.pallete[i].val - last.val));
+					                    p.arrColor(pallete[i].color),
+					                    (heat - last.val) / (pallete[i].val - last.val));
 					break;
 				}
-				last = p.pallete[i];
+				last = pallete[i];
 				color = p.arrColor(last.color);
 			}
 			return color;
@@ -206,15 +223,17 @@ $(function() {
 	$(window).bind('keydown', function (e) {
 		var matched = true;
 		var s = p.settings;
-		console.log(e.which);
+		//console.log(e.which);
 		switch (e.which) {
 			// Arrows
 			case 37: // Left
+				s.currentPallete = (s.currentPallete + s.palletes.length - 1) % s.palletes.length;
 				break;
 			case 38: // Up
 				s.heightScale -= 0.1;
 				break;
 			case 39: // Right
+				s.currentPallete = (s.currentPallete + 1) % s.palletes.length;
 				break;
 			case 40: // Down
 				s.heightScale += 0.1;
