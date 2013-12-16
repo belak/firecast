@@ -2,7 +2,7 @@
 	<head>
 		<title>Pixel Fireplace</title>
 		<style>
-            * { border: 0; margin: 0; }
+			* { border: 0; margin: 0; }
 		</style>
 		<script src="jquery-2.0.3.min.js"></script>
 		<script src="processing-1.4.1.min.js"></script>
@@ -21,7 +21,7 @@
 						p.frameRate(15);
 						p.pixelSize = 20;
 						p.perlinTimer = 0;
-            p.emberTimer = 0;
+						p.emberTimer = 0;
 
 						p.embers = [];
 
@@ -43,7 +43,7 @@
 
 						var maxDist = Math.sqrt(Math.pow(x1 - 0, 2) + Math.pow(y1 - p.fire.length, 2));
 
-            for (var i = 0; i < p.embers.length; i++) {
+						for (var i = 0; i < p.embers.length; i++) {
 							p.stroke(128, 0, 0);
 							p.fill(128, 0, 0);
 							p.rect(x + p.pixelSize * p.embers[i].x, h - (p.embers[i].y + 1) * p.pixelSize, p.pixelSize, p.pixelSize);
@@ -55,8 +55,8 @@
 								if (r > 10) {
 									var dist = Math.sqrt(Math.pow(x1 - j, 2) + Math.pow(y1 - i, 2)) / maxDist;
 									//p.stroke(0, 0, 0);
-                  p.stroke(r, r * dist, p.fire[i][j].b, Math.floor(r + r * dist + p.fire[i][j].b) * 2);
-                  p.fill(r, r * dist, p.fire[i][j].b, Math.floor(r + r * dist + p.fire[i][j].b) * 3);
+									p.stroke(r, r * dist, p.fire[i][j].b, Math.floor(r + r * dist + p.fire[i][j].b) * 2);
+									p.fill(r, r * dist, p.fire[i][j].b, Math.floor(r + r * dist + p.fire[i][j].b) * 3);
 									p.rect(x + p.pixelSize * j, h - (i + 1) * p.pixelSize, p.pixelSize, p.pixelSize);
 								}
 							}
@@ -104,23 +104,23 @@
 							}
 						}
 
-            p.emberTimer += 1;
-            if (p.emberTimer > 5) {
-              p.emberTimer = 0;
-              var x = Math.floor(Math.random() * (p.fire[0].length));
-              for (var i = 0; i < p.fire.length; i++) {
-                if (p.fire[i][x].r + p.fire[i][x].g + p.fire[i][x].b > 50) {
-                  // Maybe make a few embers
-                  var ember = {
-                    x: x,
-                    y: i,
-                    t: 10,
-                  };
-                  p.embers.push(ember);
-                  break;
-                }
-              }
-            }
+						p.emberTimer += 1;
+						if (p.emberTimer > 5) {
+							p.emberTimer = 0;
+							var x = Math.floor(Math.random() * (p.fire[0].length));
+							for (var i = 0; i < p.fire.length; i++) {
+								if (p.fire[i][x].r + p.fire[i][x].g + p.fire[i][x].b > 50) {
+									// Maybe make a few embers
+									var ember = {
+										x: x,
+										y: i,
+										t: 10,
+									};
+									p.embers.push(ember);
+									break;
+								}
+							}
+						}
 					}
 				}
 
