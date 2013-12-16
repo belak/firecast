@@ -43,6 +43,18 @@
 						p.strokeWeight(1/p.pixelSize);
 					}
 
+					// black -> blue -> -> red -> orange -> yellow
+					p.heatToColor = function(heat) {
+						heat *= 3;
+						if (heat < 10) {
+							return p.color(0,0,0);
+						} else if (heat < 100) {
+							return p.color(55+heat*2,0,0);
+						} else {
+							return p.color(255, (heat-100)*255/155,0);
+						}
+					}
+
 					p.draw = function() {
 						p.resize();
 						p.updateFire();
@@ -60,11 +72,10 @@
 
 						for (var i = 0; i < p.gridHeight; i++) {
 							for (var j = 0; j < p.gridWidth; j++) {
-								var r = p.fire[i][j].r - Math.abs(i - p.gridWidth / 2) * p.pixelSize / 7;
-								if (r > 10) {
-									var dist = p.dist(x1, y1, j, i) / maxDist;
-									p.stroke(r, r * dist, p.fire[i][j].b);
-									p.fill(r, r * dist, p.fire[i][j].b);
+								var h = p.fire[i][j].h - Math.abs(i - p.gridWidth / 2) * p.pixelSize / 7;
+								if (h > 10) {
+									p.stroke(p.heatToColor(h));
+									p.fill(p.heatToColor(h));
 									p.pixelRect(j, i);
 								}
 							}
@@ -86,13 +97,15 @@
 
 						p.fire = [];
 						p.perlinTimer += 1;
+
+						var maxDist = p.dist(0,2,p.gridWidth/2,p.gridHeight);
 						for (var i = 0; i < p.gridHeight; i++) {
 							p.fire.push([]);
 							for (var j = 0; j < p.gridWidth; j++) {
+								var h = 255 * p.noise(j * 0.3, i * 0.3, p.perlinTimer) - i * 7;
+								h *= 1 - p.dist(p.gridWidth/2,2,j,i)/maxDist;
 								var pixel = {
-									r: 255 * p.noise(j * 0.3, i * 0.3, p.perlinTimer) - i * 7,
-									g: 0,
-									b: 0,
+									h: h
 								};
 								p.fire[i].push(pixel);
 							}
@@ -118,8 +131,8 @@
 						if (p.emberTimer > 5) {
 							p.emberTimer = 0;
 							var x = Math.floor(Math.random() * (p.fire[0].length));
-							for (var i = 0; i < p.fire.length; i++) {
-								if (p.fire[i][x].r + p.fire[i][x].g + p.fire[i][x].b > 50) {
+							for (var i = 0; i < p.gridHeight; i++) {
+								if (p.fire[i][x].heat > 50) {
 									var ember = {
 										x: x,
 										y: i,
@@ -148,4 +161,5 @@
 		<canvas id="fire"></canvas>
 	</body>
 </html>
+
 
