@@ -6,24 +6,34 @@ $(function() {
 
 	var sketch = new Processing.Sketch();
 	sketch.attachFunction = function(p) {
+		p.updateSettings = function(settings) {
+			p.settings = settings;
+			for (var x in settings) {
+				p[x] = settings[x];
+			}
+		}
+
 		p.setup = function() {
 			p.size(canvas.width, canvas.height);
 
 			// Use this to limit tearing and make it more "pixely"
 			p.frameRate(15);
-			p.pixelSize = 15;
 
-			// Perlin Variables
-			p.perlinTimer = 0;
-			p.perlinScale = 0.3;
-			p.perlinStep = 0.2;
+			p.updateSettings({
+				pixelSize: 15,
 
-			// Ember Variables
-			p.emberTimer = 0;
-			p.emberAlpha = 128;
+				// Perlin Variables
+				perlinTimer: 0,
+				perlinScale: 0.3,
+				perlinStep: 0.2,
 
-			// Display Variables
-			p.pixelBoundaries = false;
+				// Ember Variables
+				emberTimer: 0,
+				emberAlpha: 128,
+
+				// Display Variables
+				pixelBoundaries: false
+			});
 
 			p.embers = [];
 
@@ -166,3 +176,4 @@ $(function() {
 		p.resize();
 	});
 });
+
