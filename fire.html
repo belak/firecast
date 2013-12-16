@@ -22,6 +22,8 @@
 						p.frameRate(15);
 						p.pixelSize = 20;
 						p.perlinTimer = 0;
+						p.perlinScale = 0.3;
+						p.perlinStep = 0.2;
 						p.emberTimer = 0;
 						p.emberAlpha = 128;
 
@@ -94,7 +96,7 @@
 							p.fire.push([]);
 							for (var j = 0; j < p.gridWidth; j++) {
 								var pixel = {
-									r: 255 * p.noise(j * 0.3, i * 0.3, p.perlinTimer) - i * 7,
+									r: 255 * p.noise(j * p.perlinScale, i * p.perlinScale, p.perlinTimer * p.perlinStep) - i * 7,
 									g: 0,
 									b: 0,
 								};
