@@ -78,13 +78,13 @@ $(function() {
 
 		// black -> blue -> -> red -> orange -> yellow
 		p.heatToColor = function(heat) {
-			var last = {val:0,color:[0,0,0]};
+			var last = {val: 0, color: [0,0,0]};
 			var color = 0;
 			for (var i = 0; i < p.pallete.length; i++) {
 				if (heat <= p.pallete[i].val) {
 					color = p.lerpColor(p.arrColor(last.color),
 					                    p.arrColor(p.pallete[i].color),
-					                    (heat-last.val)/(p.pallete[i].val-last.val));
+					                    (heat - last.val) / (p.pallete[i].val - last.val));
 					break;
 				}
 				last = p.pallete[i];
@@ -142,7 +142,7 @@ $(function() {
 			p.fire = [];
 			p.perlinTimer += 1;
 
-			var maxDist = p.dist(0,2,p.gridWidth/2,p.gridHeight);
+			var maxDist = p.dist(0, 2, p.gridWidth / 2, p.gridHeight);
 			for (var i = 0; i < p.gridHeight; i++) {
 				p.fire.push([]);
 				for (var j = 0; j < p.gridWidth; j++) {
@@ -175,6 +175,7 @@ $(function() {
 				}
 			}
 
+			// Possibly generate new embers
 			p.emberTimer += 1;
 			if (p.emberTimer > 5) {
 				p.emberTimer = 0;
