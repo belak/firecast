@@ -40,16 +40,16 @@ $(function() {
 				pixelBoundaries: false,
 				heightScale: 0.5,
 
-				currentPallete: 0,
+				currentPalette: 0,
 
-				palletes: [
+				palettes: [
 				   	[
 						{val: 70,  color: [0,   0,   0]},
 						{val: 110, color: [255, 0,   0]},
 						{val: 150, color: [255, 255, 0]},
 					],
 					[
-						{val: 78,  color: [0,   0,   0]},
+						{val: 70,  color: [0,   0,   0]},
 						{val: 79,  color: [0,   0,   10]},
 						{val: 80,  color: [0,   0,   90]},
 						{val: 81,  color: [150, 75,  0]},
@@ -101,15 +101,15 @@ $(function() {
 		p.heatToColor = function(heat) {
 			var last = {val: 0, color: [0,0,0]};
 			var color = 0;
-			var pallete = p.palletes[p.currentPallete];
-			for (var i = 0; i < pallete.length; i++) {
-				if (heat <= pallete[i].val) {
+			var palette = p.palettes[p.currentPalette];
+			for (var i = 0; i < palette.length; i++) {
+				if (heat <= palette[i].val) {
 					color = p.lerpColor(p.arrColor(last.color),
-					                    p.arrColor(pallete[i].color),
-					                    (heat - last.val) / (pallete[i].val - last.val));
+					                    p.arrColor(palette[i].color),
+					                    (heat - last.val) / (palette[i].val - last.val));
 					break;
 				}
-				last = pallete[i];
+				last = palette[i];
 				color = p.arrColor(last.color);
 			}
 			return color;
@@ -227,13 +227,13 @@ $(function() {
 		switch (e.which) {
 			// Arrows
 			case 37: // Left
-				s.currentPallete = (s.currentPallete + s.palletes.length - 1) % s.palletes.length;
+				s.currentPalette = (s.currentPalette + s.palettes.length - 1) % s.palettes.length;
 				break;
 			case 38: // Up
 				s.heightScale -= 0.1;
 				break;
 			case 39: // Right
-				s.currentPallete = (s.currentPallete + 1) % s.palletes.length;
+				s.currentPalette = (s.currentPalette + 1) % s.palettes.length;
 				break;
 			case 40: // Down
 				s.heightScale += 0.1;
