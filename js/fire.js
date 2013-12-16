@@ -9,8 +9,7 @@ $(function() {
 		// Simple function to pull all settings from an object and dump them into the processing object
 		p.updateSettings = function(settings) {
 			for (var x in settings) {
-				p[x] = settings[x];
-				p.settings[x] = settings[x];
+				p.s[x] = settings[x];
 			}
 		}
 
@@ -18,12 +17,12 @@ $(function() {
 		p.resize = function() {
 			p.size(canvas.width, canvas.height);
 
-			p.gridHeight = p.floor(canvas.height / p.pixelSize);
-			p.gridWidth = p.floor(canvas.width / p.pixelSize);
+			p.gridHeight = p.floor(canvas.height / p.s.pixelSize);
+			p.gridWidth = p.floor(canvas.width / p.s.pixelSize);
 		}
 
 		p.setup = function() {
-			p.settings = {};
+			p.s = {};
 
 			p.updateSettings({
 				pixelSize: 15,
@@ -87,20 +86,19 @@ $(function() {
 
 			p.translate(0,h);
 			p.scale(1, -1);
-			p.translate((w - p.gridWidth * p.pixelSize) / 2.0, 0);
-			p.scale(p.pixelSize, p.pixelSize);
-			p.strokeWeight(1 / p.pixelSize);
+			p.translate((w - p.gridWidth * p.s.pixelSize) / 2.0, 0);
+			p.scale(p.s.pixelSize, p.s.pixelSize);
+			p.strokeWeight(1 / p.s.pixelSize);
 		}
 
 		p.arrColor = function(cr) {
 			return p.color(cr[0], cr[1], cr[2]);
 		}
 
-		// black -> blue -> -> red -> orange -> yellow
 		p.heatToColor = function(heat) {
 			var last = {val: 0, color: [0, 0, 0]};
 			var color = 0;
-			var palette = p.palettes[p.currentPalette];
+			var palette = p.s.palettes[p.s.currentPalette];
 			for (var i = 0; i < palette.length; i++) {
 				if (heat <= palette[i].val) {
 					color = p.lerpColor(p.arrColor(last.color),
@@ -133,7 +131,7 @@ $(function() {
 
 			var strokeFunc = p.heatToColor;
 			var colorFunc = p.heatToColor;
-			if (p.pixelBoundaries) {
+			if (p.s.pixelBoundaries) {
 				strokeFunc = function (h) {
 					return p.color(0, 0, 0);
 				}
@@ -144,7 +142,6 @@ $(function() {
 			for (var i = 0; i < p.gridHeight; i++) {
 				for (var j = 0; j < p.gridWidth; j++) {
 					var h = p.fire[i][j].h;
-					//p.stroke(p.heatToColor(h));
 					var pixelColor = colorFunc(h);
 					if (pixelColor != black) {
 						p.stroke(strokeFunc(h));
@@ -156,7 +153,7 @@ $(function() {
 
 			for (var i = 0; i < p.embers.length; i++) {
 				p.noStroke();
-				p.fill(p.heatToColor(90), p.emberAlpha);
+				p.fill(p.heatToColor(90), p.s.emberAlpha);
 				p.pixelRect(p.embers[i].x, p.embers[i].y+1);
 			}
 
@@ -173,10 +170,10 @@ $(function() {
 				p.fire.push([]);
 				for (var j = 0; j < p.gridWidth; j++) {
 					// Perlin noise
-					var h = 255 * p.noise(j * p.perlinScale, i * p.perlinScale, p.perlinTimer * p.perlinStep);
+					var h = 255 * p.noise(j * p.s.perlinScale, i * p.s.perlinScale, p.perlinTimer * p.s.perlinStep);
 
 					// Scale down based on height
-					h *= 1.0 - (i / p.gridHeight) * p.heightScale;
+					h *= 1.0 - (i / p.gridHeight) * p.s.heightScale;
 
 					// Scale down based on distance from origin
 					h *= 1.0 - p.dist(p.gridWidth / 2, 2, j, i) / maxDist;
@@ -196,7 +193,7 @@ $(function() {
 
 				p.embers[i].t += 1;
 
-				if (p.embers[i].y > canvas.height / p.pixelSize) {
+				if (p.embers[i].y > canvas.height / p.s.pixelSize) {
 					// Remove it
 					p.embers.splice(i, 1);
 				}
@@ -208,7 +205,7 @@ $(function() {
 				p.emberTimer = 0;
 				var x = p.floor(p.random() * (p.gridWidth));
 				for (var i = 0; i < p.gridHeight; i++) {
-					if (p.fire[i][x].h > p.emberMin) {
+					if (p.fire[i][x].h > p.s.emberMin) {
 						var ember = {
 							x: x,
 							y: i,
@@ -226,7 +223,7 @@ $(function() {
 
 	$(window).bind('keydown', function (e) {
 		var matched = true;
-		var s = p.settings;
+		var s = p.s;
 		//console.log(e.which);
 		switch (e.which) {
 			// Arrows
