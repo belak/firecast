@@ -21,6 +21,7 @@
 						p.frameRate(15);
 						p.pixelSize = 20;
 						p.perlinTimer = 0;
+						p.emberTimer = 0;
 
 						p.embers = [];
 
@@ -116,13 +117,23 @@
 							}
 						}
 
-						// Maybe make a few embers
-						var ember = {
-							x: Math.floor(Math.random() * (p.fire[0].length + 1)),
-							y: p.fire.length,
-							t: 10,
-						};
-						p.embers.push(ember);
+						p.emberTimer += 1;
+						if (p.emberTimer > 5) {
+							p.emberTimer = 0;
+							var x = Math.floor(Math.random() * (p.fire[0].length));
+							for (var i = 0; i < p.fire.length; i++) {
+								if (p.fire[i][x].r + p.fire[i][x].g + p.fire[i][x].b > 50) {
+									// Maybe make a few embers
+									var ember = {
+										x: x,
+										y: i,
+										t: 10,
+									};
+									p.embers.push(ember);
+									break;
+								}
+							}
+						}
 					}
 				}
 
@@ -141,6 +152,4 @@
 		<canvas id="fire"></canvas>
 	</body>
 </html>
-
-
 
