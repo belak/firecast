@@ -23,6 +23,7 @@
 						p.pixelSize = 20;
 						p.perlinTimer = 0;
 						p.emberTimer = 0;
+						p.emberAlpha = 128;
 
 						p.embers = [];
 
@@ -38,7 +39,7 @@
 						var h = canvas.height;
 
 						p.translate(0,h);
-						p.scale(1,-1);
+						p.scale(1, -1);
 						p.translate((w - p.gridWidth * p.pixelSize) / 2.0, 0);
 						p.scale(p.pixelSize, p.pixelSize);
 						p.strokeWeight(1 / p.pixelSize);
@@ -71,8 +72,8 @@
 						}
 
 						for (var i = 0; i < p.embers.length; i++) {
-							p.stroke(128, 0, 0, 128);
-							p.fill(128, 0, 0, 128);
+							p.stroke(128, 0, 0, p.emberAlpha);
+							p.fill(128, 0, 0, p.emberAlpha);
 							p.pixelRect(p.embers[i].x, p.embers[i].y+1);
 						}
 
