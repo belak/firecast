@@ -9,6 +9,7 @@
 		<script>
 			$(function() {
 				var canvas = $("#fire").first()[0]
+
 				canvas.width = window.innerWidth;
 				canvas.height = window.innerHeight;
 
@@ -29,7 +30,7 @@
 					}
 
 					p.pixelRect = function(x,y) {
-						p.rect(x,y,1,1);
+						p.rect(x, y, 1, 1);
 					}
 
 					p.setupTransform = function() {
@@ -62,12 +63,10 @@
 						for (var i = 0; i < p.gridHeight; i++) {
 							for (var j = 0; j < p.gridWidth; j++) {
 								var r = p.fire[i][j].r - Math.abs(i - p.gridWidth / 2) * p.pixelSize / 7;
-								if (r > 10) {
-									var dist = p.dist(x1, y1, j, i) / maxDist;
-									p.stroke(r, r * dist, p.fire[i][j].b);
-									p.fill(r, r * dist, p.fire[i][j].b);
-									p.pixelRect(j, i);
-								}
+								var dist = p.dist(x1, y1, j, i) / maxDist;
+								p.stroke(r, r * dist, p.fire[i][j].b);
+								p.fill(r, r * dist, p.fire[i][j].b);
+								p.pixelRect(j, i);
 							}
 						}
 
