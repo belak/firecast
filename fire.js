@@ -134,8 +134,8 @@ $(function() {
 			}
 
 			for (var i = 0; i < p.embers.length; i++) {
-				p.stroke(128, 0, 0, p.emberAlpha);
-				p.fill(128, 0, 0, p.emberAlpha);
+				p.noStroke();
+				p.fill(p.heatToColor(90), p.emberAlpha);
 				p.pixelRect(p.embers[i].x, p.embers[i].y+1);
 			}
 
@@ -237,3 +237,4 @@ $(function() {
 		p.resize();
 	});
 });
+
