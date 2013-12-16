@@ -33,6 +33,7 @@ $(function() {
 				perlinStep: 0.2,
 
 				// Ember Variables
+				emberMin: 100,
 				emberAlpha: 128,
 
 				// Display Variables
@@ -186,7 +187,7 @@ $(function() {
 				p.emberTimer = 0;
 				var x = p.floor(p.random() * (p.gridWidth));
 				for (var i = 0; i < p.gridHeight; i++) {
-					if (p.fire[i][x].h > 50) {
+					if (p.fire[i][x].h > p.emberMin) {
 						var ember = {
 							x: x,
 							y: i,
