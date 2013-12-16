@@ -55,8 +55,8 @@
 								if (r > 10) {
 									var dist = Math.sqrt(Math.pow(x1 - j, 2) + Math.pow(y1 - i, 2)) / maxDist;
 									//p.stroke(0, 0, 0);
-									p.stroke(r, r * dist, p.fire[i][j].b);
-									p.fill(r, r * dist, p.fire[i][j].b);
+                  p.stroke(r, r * dist, p.fire[i][j].b, Math.floor(r + r * dist + p.fire[i][j].b) * 2);
+                  p.fill(r, r * dist, p.fire[i][j].b, Math.floor(r + r * dist + p.fire[i][j].b) * 3);
 									p.rect(x + p.pixelSize * j, h - (i + 1) * p.pixelSize, p.pixelSize, p.pixelSize);
 								}
 							}
