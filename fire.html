@@ -44,8 +44,9 @@
 					}
 
 					p.draw = function() {
-						p.resize();
+						// Update stuff that needs to be
 						p.updateFire();
+
 						p.background(0);
 
 						p.pushMatrix();
@@ -83,7 +84,10 @@
 						p.size(canvas.width, canvas.height);
 						p.gridHeight = p.floor(canvas.height / p.pixelSize * 2 / 3);
 						p.gridWidth = p.floor(canvas.width / p.pixelSize);
+					}
 
+					p.updateFire = function() {
+						// Update fire
 						p.fire = [];
 						p.perlinTimer += 1;
 						for (var i = 0; i < p.gridHeight; i++) {
@@ -97,9 +101,7 @@
 								p.fire[i].push(pixel);
 							}
 						}
-					}
 
-					p.updateFire = function() {
 						// Update embers
 						for (var i = p.embers.length - 1; i >= 0; i--) {
 							if (p.embers[i].t > 10) {
