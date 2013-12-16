@@ -32,7 +32,13 @@ $(function() {
 				emberAlpha: 128,
 
 				// Display Variables
-				pixelBoundaries: false
+				pixelBoundaries: false,
+
+				pallete: [
+					{val: 15, color: [0,0,0]},
+					{val: 33, color: [255,0,0]},
+					{val: 75, color: [255,255,0]}
+				]
 			});
 
 			p.embers = [];
@@ -55,16 +61,23 @@ $(function() {
 			p.strokeWeight(1 / p.pixelSize);
 		}
 
+		p.arrColor = function(cr) {
+			return p.color(cr[0],cr[1],cr[2]);
+		}
+
 		// black -> blue -> -> red -> orange -> yellow
 		p.heatToColor = function(heat) {
-			heat *= 3;
-			if (heat < 50) {
-				return p.color(0,0,0);
-			} else if (heat < 100) {
-				return p.color(55+heat*2,0,0);
-			} else {
-				return p.color(255, (heat-100)*255/155,0);
+			var last = {val:0,color:[0,0,0]};
+			var color = 0;
+			for (var i = 0; i < p.pallete.length; i++) {
+				if (heat <= p.pallete[i].val) {
+					color = p.lerpColor(p.arrColor(last.color),p.arrColor(p.pallete[i].color),(heat-last.val)/(p.pallete[i].val-last.val));
+					break;
+				}
+				last = p.pallete[i];
+				color = p.arrColor(last.color);
 			}
+			return color;
 		}
 
 		p.draw = function() {
@@ -176,4 +189,10 @@ $(function() {
 		p.resize();
 	});
 });
+
+
+
+
+
+
 
