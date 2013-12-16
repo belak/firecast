@@ -73,7 +73,6 @@ $(function() {
 			// Use this to limit tearing and make it more "pixely"
 			p.frameRate(15);
 
-
 			p.embers = [];
 		}
 
@@ -99,7 +98,7 @@ $(function() {
 
 		// black -> blue -> -> red -> orange -> yellow
 		p.heatToColor = function(heat) {
-			var last = {val: 0, color: [0,0,0]};
+			var last = {val: 0, color: [0, 0, 0]};
 			var color = 0;
 			var palette = p.palettes[p.currentPalette];
 			for (var i = 0; i < palette.length; i++) {
@@ -140,13 +139,18 @@ $(function() {
 				}
 			}
 
+			var black = p.color(0, 0, 0);
+
 			for (var i = 0; i < p.gridHeight; i++) {
 				for (var j = 0; j < p.gridWidth; j++) {
 					var h = p.fire[i][j].h;
 					//p.stroke(p.heatToColor(h));
-					p.stroke(strokeFunc(h));
-					p.fill(colorFunc(h));
-					p.pixelRect(j, i);
+					var pixelColor = colorFunc(h);
+					if (pixelColor != black) {
+						p.stroke(strokeFunc(h));
+						p.fill(colorFunc(h));
+						p.pixelRect(j, i);
+					}
 				}
 			}
 
