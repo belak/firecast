@@ -49,6 +49,21 @@ window.onload = function() {
 					],
 					[
 						{val: 70,  color: [0,   0,   0]},
+						{val: 110, color: [0,   0,   255]},
+						{val: 150, color: [0,   255, 255]},
+					],
+					[
+						{val: 70,  color: [0,   0,   0]},
+						{val: 110, color: [0,   255, 0]},
+						{val: 150, color: [0,   255, 255]},
+					],
+					[
+						{val: 70,  color: [0,   0,   0]},
+						{val: 100, color: [0,   0,   255]},
+						{val: 120, color: [255, 0,   255]},
+					],
+					[
+						{val: 70,  color: [0,   0,   0]},
 						{val: 79,  color: [0,   0,   10]},
 						{val: 80,  color: [0,   0,   90]},
 						{val: 81,  color: [150, 75,  0]},
@@ -70,7 +85,7 @@ window.onload = function() {
 			p.resize();
 
 			// Use this to limit tearing and make it more "pixely"
-			p.frameRate(15);
+			p.frameRate(12);
 
 			p.embers = [];
 		};
