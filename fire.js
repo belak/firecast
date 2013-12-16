@@ -1,5 +1,5 @@
 $(function() {
-	var canvas = $("#fire").first()[0]
+	var canvas = $("#fire").first()[0];
 
 	canvas.width = window.innerWidth;
 	canvas.height = window.innerHeight;
@@ -24,7 +24,7 @@ $(function() {
 
 				// Perlin Variables
 				perlinTimer: 0,
-				perlinScale: 0.3,
+				perlinScale: 0.2,
 				perlinStep: 0.2,
 
 				// Ember Variables
@@ -33,11 +33,12 @@ $(function() {
 
 				// Display Variables
 				pixelBoundaries: false,
+				heightScale: 0.5,
 
 				pallete: [
-					{val: 15, color: [0,0,0]},
-					{val: 33, color: [255,0,0]},
-					{val: 75, color: [255,255,0]}
+					{val: 80, color: [0,0,0]},
+					{val: 110, color: [255,0,0]},
+					{val: 150, color: [255,255,0]}
 				]
 			});
 
@@ -71,7 +72,9 @@ $(function() {
 			var color = 0;
 			for (var i = 0; i < p.pallete.length; i++) {
 				if (heat <= p.pallete[i].val) {
-					color = p.lerpColor(p.arrColor(last.color),p.arrColor(p.pallete[i].color),(heat-last.val)/(p.pallete[i].val-last.val));
+					color = p.lerpColor(p.arrColor(last.color),
+					                    p.arrColor(p.pallete[i].color),
+					                    (heat-last.val)/(p.pallete[i].val-last.val));
 					break;
 				}
 				last = p.pallete[i];
@@ -106,7 +109,7 @@ $(function() {
 
 			for (var i = 0; i < p.gridHeight; i++) {
 				for (var j = 0; j < p.gridWidth; j++) {
-					var h = p.fire[i][j].h - Math.abs(i - p.gridWidth / 2) * p.pixelSize / 7;
+					var h = p.fire[i][j].h;
 					//p.stroke(p.heatToColor(h));
 					p.stroke(strokeFunc(h));
 					p.fill(colorFunc(h));
@@ -125,7 +128,7 @@ $(function() {
 
 		p.resize = function() {
 			p.size(canvas.width, canvas.height);
-			p.gridHeight = p.floor(canvas.height / p.pixelSize * 2 / 3);
+			p.gridHeight = p.floor(canvas.height / p.pixelSize);
 			p.gridWidth = p.floor(canvas.width / p.pixelSize);
 		}
 
@@ -138,8 +141,14 @@ $(function() {
 			for (var i = 0; i < p.gridHeight; i++) {
 				p.fire.push([]);
 				for (var j = 0; j < p.gridWidth; j++) {
-					var h = 255 * p.noise(j * p.perlinScale, i * p.perlinScale, p.perlinTimer * p.perlinStep) - i * 7;
-					h *= 1 - p.dist(p.gridWidth/2,2,j,i)/maxDist;
+					// Perlin noise
+					var h = 255 * p.noise(j * p.perlinScale, i * p.perlinScale, p.perlinTimer * p.perlinStep);
+
+					// Scale down based on height
+					h *= 1.0 - (i / p.gridHeight) * p.heightScale;
+
+					// Scale down based on distance from origin
+					h *= 1.0 - p.dist(p.gridWidth / 2, 2, j, i) / maxDist;
 					var pixel = {
 						h: h
 					};
@@ -189,10 +198,3 @@ $(function() {
 		p.resize();
 	});
 });
-
-
-
-
-
-
-
