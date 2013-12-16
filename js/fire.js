@@ -11,7 +11,7 @@ $(function() {
 			for (var x in settings) {
 				p.s[x] = settings[x];
 			}
-		}
+		};
 
 		// Resizes the processing canvas based on the html canvas
 		p.resize = function() {
@@ -19,7 +19,7 @@ $(function() {
 
 			p.gridHeight = p.floor(canvas.height / p.s.pixelSize);
 			p.gridWidth = p.floor(canvas.width / p.s.pixelSize);
-		}
+		};
 
 		p.setup = function() {
 			p.s = {};
@@ -59,7 +59,7 @@ $(function() {
 						{val: 115, color: [255, 255, 0]},
 						{val: 120, color: [255, 255, 255]},
 					],
-				]
+				],
 			});
 
 			// Set the counters
@@ -73,12 +73,12 @@ $(function() {
 			p.frameRate(15);
 
 			p.embers = [];
-		}
+		};
 
 		// Draws a big pixel
 		p.pixelRect = function(x,y) {
 			p.rect(x, y, 1, 1);
-		}
+		};
 
 		p.setupTransform = function() {
 			var w = canvas.width;
@@ -89,7 +89,7 @@ $(function() {
 			p.translate((w - p.gridWidth * p.s.pixelSize) / 2.0, 0);
 			p.scale(p.s.pixelSize, p.s.pixelSize);
 			p.strokeWeight(1 / p.s.pixelSize);
-		}
+		};
 
 		p.arrColor = function(cr) {
 			return p.color(cr[0], cr[1], cr[2]);
@@ -110,7 +110,7 @@ $(function() {
 				color = p.arrColor(last.color);
 			}
 			return color;
-		}
+		};
 
 		p.draw = function() {
 			// Update state
@@ -134,7 +134,7 @@ $(function() {
 			if (p.s.pixelBoundaries) {
 				strokeFunc = function (h) {
 					return p.color(0, 0, 0);
-				}
+				};
 			}
 
 			var black = p.color(0, 0, 0);
@@ -158,7 +158,7 @@ $(function() {
 			}
 
 			p.popMatrix();
-		}
+		};
 
 		p.updateFire = function() {
 			// Update fire
@@ -217,7 +217,7 @@ $(function() {
 				}
 			}
 		}
-	}
+	};
 
 	var p = new Processing(canvas, sketch);
 
