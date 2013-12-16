@@ -11,12 +11,19 @@ $(function() {
 
 			// Use this to limit tearing and make it more "pixely"
 			p.frameRate(15);
-			p.pixelSize = 20;
+			p.pixelSize = 15;
+
+			// Perlin Variables
 			p.perlinTimer = 0;
 			p.perlinScale = 0.3;
 			p.perlinStep = 0.2;
+
+			// Ember Variables
 			p.emberTimer = 0;
 			p.emberAlpha = 128;
+
+			// Display Variables
+			p.pixelBoundaries = false;
 
 			p.embers = [];
 
@@ -41,7 +48,7 @@ $(function() {
 		// black -> blue -> -> red -> orange -> yellow
 		p.heatToColor = function(heat) {
 			heat *= 3;
-			if (heat < 10) {
+			if (heat < 50) {
 				return p.color(0,0,0);
 			} else if (heat < 100) {
 				return p.color(55+heat*2,0,0);
@@ -66,11 +73,20 @@ $(function() {
 
 			p.noStroke();
 
+			var strokeFunc = p.heatToColor;
+			var colorFunc = p.heatToColor;
+			if (p.pixelBoundaries) {
+				strokeFunc = function (h) {
+					return p.color(0, 0, 0);
+				}
+			}
+
 			for (var i = 0; i < p.gridHeight; i++) {
 				for (var j = 0; j < p.gridWidth; j++) {
 					var h = p.fire[i][j].h - Math.abs(i - p.gridWidth / 2) * p.pixelSize / 7;
-					p.stroke(p.heatToColor(h));
-					p.fill(p.heatToColor(h));
+					//p.stroke(p.heatToColor(h));
+					p.stroke(strokeFunc(h));
+					p.fill(colorFunc(h));
 					p.pixelRect(j, i);
 				}
 			}
