@@ -2,7 +2,7 @@
 	<head>
 		<title>Pixel Fireplace</title>
 		<style>
-			* { border: 0; margin: 0; }
+            * { border: 0; margin: 0; }
 		</style>
 		<script src="jquery-2.0.3.min.js"></script>
 		<script src="processing-1.4.1.min.js"></script>
@@ -21,6 +21,7 @@
 						p.frameRate(15);
 						p.pixelSize = 20;
 						p.perlinTimer = 0;
+            p.emberTimer = 0;
 
 						p.embers = [];
 
@@ -42,6 +43,12 @@
 
 						var maxDist = Math.sqrt(Math.pow(x1 - 0, 2) + Math.pow(y1 - p.fire.length, 2));
 
+            for (var i = 0; i < p.embers.length; i++) {
+							p.stroke(128, 0, 0);
+							p.fill(128, 0, 0);
+							p.rect(x + p.pixelSize * p.embers[i].x, h - (p.embers[i].y + 1) * p.pixelSize, p.pixelSize, p.pixelSize);
+						}
+
 						for (var i = 0; i < p.fire.length; i++) {
 							for (var j = 0; j < p.fire[i].length; j++) {
 								var r = p.fire[i][j].r - Math.abs(x + p.pixelSize * j - w / 2) / 7;
@@ -53,12 +60,6 @@
 									p.rect(x + p.pixelSize * j, h - (i + 1) * p.pixelSize, p.pixelSize, p.pixelSize);
 								}
 							}
-						}
-
-						for (var i = 0; i < p.embers.length; i++) {
-							p.stroke(128, 0, 0);
-							p.fill(128, 0, 0);
-							p.rect(x + p.pixelSize * p.embers[i].x, h - (p.embers[i].y + 1) * p.pixelSize, p.pixelSize, p.pixelSize);
 						}
 
 						// For good measure right now
@@ -103,13 +104,23 @@
 							}
 						}
 
-						// Maybe make a few embers
-						var ember = {
-							x: Math.floor(Math.random() * (p.fire[0].length + 1)),
-							y: p.fire.length,
-							t: 10,
-						};
-						p.embers.push(ember);
+            p.emberTimer += 1;
+            if (p.emberTimer > 5) {
+              p.emberTimer = 0;
+              var x = Math.floor(Math.random() * (p.fire[0].length));
+              for (var i = 0; i < p.fire.length; i++) {
+                if (p.fire[i][x].r + p.fire[i][x].g + p.fire[i][x].b > 50) {
+                  // Maybe make a few embers
+                  var ember = {
+                    x: x,
+                    y: i,
+                    t: 10,
+                  };
+                  p.embers.push(ember);
+                  break;
+                }
+              }
+            }
 					}
 				}
 
