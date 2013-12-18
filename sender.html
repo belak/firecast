@@ -1,0 +1,36 @@
+<html data-cast-api-enabled="true">
+    <head>
+        <script type="text/javascript" src="appid.js"></script>
+        <script type="text/javascript">
+            var cast_api;
+
+            function initializeApi() {
+                cast_api = new cast.Api();
+                cast_api.addReceiverListener(appid, onReceiverList);
+            }
+
+            function onReceiverList(list) {
+                if (list.length > 0) {
+                    var request = new window.cast.LaunchRequest(appid, list[0]);
+                    cast_api.launch(request, onLaunch);
+                }
+            }
+
+            function onLaunch(activity) {
+                console.log(activity);
+            }
+
+            if (window.cast && window.cast.isAvailable) {
+                initializeApi();
+            } else {
+                window.addEventListener("message", function(event){
+                    if (event.source == window && event.data &&
+                       event.data.source == "CastApi" &&
+                       event.data.event == "Hello") {
+                        initializeApi();
+                    }
+                });
+            }
+        </script>
+    </head>
+</html>
