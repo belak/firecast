@@ -1,3 +1,10 @@
+var receiver = new cast.receiver.Receiver(
+	appid, [],
+	"",
+	5);
+
+receiver.start();
+
 window.onload = function() {
 	var canvas = document.getElementById('fire');
 
