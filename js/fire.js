@@ -1,9 +1,11 @@
+/*
 var receiver = new cast.receiver.Receiver(
 	appid, [],
 	"",
 	5);
 
 receiver.start();
+*/
 
 window.onload = function() {
 	var canvas = document.getElementById('fire');
@@ -24,8 +26,10 @@ window.onload = function() {
 		p.resize = function() {
 			p.size(canvas.width, canvas.height);
 
-			p.gridHeight = p.floor(canvas.height / p.s.pixelSize);
-			p.gridWidth = p.floor(canvas.width / p.s.pixelSize);
+			p.gridHeight = (canvas.height / p.s.pixelSize) | 0;
+			p.gridWidth = (canvas.width / p.s.pixelSize) | 0;
+
+			p.fire = new Array(p.gridWidth * p.gridHeight);
 		};
 
 		p.setup = function() {
@@ -95,20 +99,13 @@ window.onload = function() {
 			p.frameRate(12);
 
 			p.embers = [];
-		};
-
-		// Draws a big pixel
-		p.pixelRect = function(x,y) {
-			p.rect(x, y, 1, 1);
+			p.black = p.color(0, 0, 0);
 		};
 
 		p.setupTransform = function() {
-			var w = canvas.width;
-			var h = canvas.height;
-
-			p.translate(0,h);
+			p.translate(0, canvas.height);
 			p.scale(1, -1);
-			p.translate((w - p.gridWidth * p.s.pixelSize) / 2.0, 0);
+			p.translate((canvas.width - p.gridWidth * p.s.pixelSize) / 2.0, 0);
 			p.scale(p.s.pixelSize, p.s.pixelSize);
 			p.strokeWeight(1 / p.s.pixelSize);
 		};
@@ -144,39 +141,27 @@ window.onload = function() {
 			p.pushMatrix();
 			p.setupTransform();
 
-			var x1 = p.gridWidth / 2;
-			var y1 = 2;
-
-			var maxDist = p.dist(x1, y1, 0, p.gridHeight);
+			var maxDist = p.dist(p.gridWidth / 2, 2, 0, p.gridHeight);
 
 			p.noStroke();
 
-			var strokeFunc = p.heatToColor;
-			var colorFunc = p.heatToColor;
-			if (p.s.pixelBoundaries) {
-				strokeFunc = function (h) {
-					return p.color(0, 0, 0);
-				};
-			}
-
-			var black = p.color(0, 0, 0);
-
+			var pixelColor = 0;
+			var h = 0;
 			for (var i = 0; i < p.gridHeight; i++) {
 				for (var j = 0; j < p.gridWidth; j++) {
-					var h = p.fire[i][j].h;
-					var pixelColor = colorFunc(h);
-					if (pixelColor != black) {
-						p.stroke(strokeFunc(h));
-						p.fill(colorFunc(h));
-						p.pixelRect(j, i);
+					h = p.fire[i*p.gridWidth+j];
+					pixelColor = p.heatToColor(h);
+					if (pixelColor != p.black) {
+						//p.stroke(strokeFunc(h));
+						p.fill(pixelColor);
+						p.rect(j, i, 1, 1);
 					}
 				}
 			}
 
 			for (var i = 0; i < p.embers.length; i++) {
-				p.noStroke();
 				p.fill(p.heatToColor(90), p.s.emberAlpha);
-				p.pixelRect(p.embers[i].x, p.embers[i].y+1);
+				p.rect(p.embers[i].x, p.embers[i].y+1, 1, 1);
 			}
 
 			p.popMatrix();
@@ -184,15 +169,14 @@ window.onload = function() {
 
 		p.updateFire = function() {
 			// Update fire
-			p.fire = [];
 			p.perlinTimer += 1;
 
 			var maxDist = p.dist(0, 2, p.gridWidth / 2, p.gridHeight);
+			var h = 0;
 			for (var i = 0; i < p.gridHeight; i++) {
-				p.fire.push([]);
 				for (var j = 0; j < p.gridWidth; j++) {
 					// Perlin noise
-					var h = 255 * p.noise(j * p.s.perlinScale, i * p.s.perlinScale, p.perlinTimer * p.s.perlinStep);
+					h = 255 * p.noise(j * p.s.perlinScale, i * p.s.perlinScale, p.perlinTimer * p.s.perlinStep);
 
 					// Scale down based on height
 					h *= 1.0 - (i / p.gridHeight) * p.s.heightScale;
@@ -200,10 +184,7 @@ window.onload = function() {
 					// Scale down based on distance from origin
 					h *= 1.0 - p.dist(p.gridWidth / 2, 2, j, i) / maxDist;
 
-					var pixel = {
-						h: h
-					};
-					p.fire[i].push(pixel);
+					p.fire[i*p.gridWidth+j] = h;
 				}
 			}
 
@@ -227,7 +208,7 @@ window.onload = function() {
 				p.emberTimer = 0;
 				var x = p.floor(p.random() * (p.gridWidth));
 				for (var i = 0; i < p.gridHeight; i++) {
-					if (p.fire[i][x].h > p.s.emberMin) {
+					if (p.fire[i*p.gridWidth+x] > p.s.emberMin) {
 						var ember = {
 							x: x,
 							y: i,
